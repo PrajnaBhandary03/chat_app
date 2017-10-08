@@ -23,9 +23,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
+#include <netinet/in.h>
 #include <strings.h>
 #include <string.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 
 //To get err no
 #include <errno.h>
@@ -34,14 +36,17 @@
 #include "../include/logger.h"
 
 
-#define TRUE 1
 #define MSG_SIZE 256
+#define BACKLOG 5
+#define STDIN 0
+#define TRUE 1
+#define CMD_SIZE 100
 #define BUFFER_SIZE 256
 
 
 int connect_to_host(char *server_ip, int server_port);
 int printhelp(char *filename);
-
+int invoke_client(char *PORT);
 
 /**
  * main function
@@ -61,7 +66,7 @@ int main(int argc, char **argv)
 
 	/*Start Here*/
     
-    cse4589_print_and_log("Invoked client_server file.");
+    printf("Invoked client_server file.");
     char *FILENAME = argv[0];
     if(argc != 3) {
         printhelp(FILENAME);
@@ -71,47 +76,16 @@ int main(int argc, char **argv)
     char *PORT = argv[2];
     
     if( strcmp(IDENTITY, "s") == 0){
-        cse4589_print_and_log("This is a server file");
+        printf("This is a server file");
         //call server
-
+        invoke_server(PORT);
         
     }
     else if(strcmp(IDENTITY, "c") == 0){
-        cse4589_print_and_log("This is a client file");
+        printf("This is a client file");
         // get IP Address of the host
-                      
-            //Defining arguments for the server
-            int server;
-            char *IP = "127.0.0.1";
-            server = connect_to_host(IP, atoi(PORT));
-            //Test ptint
-            cse4589_print_and_log(" Test : Client has been succesfully invoked");
-
-            while(TRUE){
-                cse4589_print_and_log("\n[PA1-Client@CSE489/589]$ ");
-                fflush(stdout);
-
-                char *msg = (char*) malloc(sizeof(char)*MSG_SIZE);
-                memset(msg, '\0', MSG_SIZE);
-                if(fgets(msg, MSG_SIZE-1, stdin) == NULL) //Mind the newline character that will be written to msg
-                    exit(-1);
-
-                cse4589_print_and_log("I got: %s(size:%ld chars)", msg, strlen(msg));
-
-                cse4589_print_and_log("\nSENDing it to the remote server ... ");
-                if(send(server, msg, strlen(msg), 0) == strlen(msg))
-                    cse4589_print_and_log("Done!\n");
-                fflush(stdout);
-
-                /* Initialize buffer to receieve response */
-                char *buffer = (char*) malloc(sizeof(char)*BUFFER_SIZE);
-                memset(buffer, '\0', BUFFER_SIZE);
-
-                if(recv(server, buffer, BUFFER_SIZE, 0) >= 0){
-                    cse4589_print_and_log("Server responded: %s", buffer);
-                    fflush(stdout);
-                }
-            }
+        invoke_client(PORT);
+        //call client
         
     }else {
         printhelp(FILENAME);
@@ -120,7 +94,7 @@ int main(int argc, char **argv)
 }
 
 int printhelp(char *filename){
-    cse4589_print_and_log("Usage:%s [s/c] [port]\n", filename);
+    printf("Usage:%s [s/c] [port]\n", filename);
     exit(-1);
 }
 
@@ -131,7 +105,7 @@ int connect_to_host(char *server_ip, int server_port)
     int fdsocket, len;
     struct sockaddr_in remote_server_addr;
       //Test ptint
-      cse4589_print_and_log(" Test : Called connect to host");
+      printf(" Test : Called connect to host");
       
 
     fdsocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -149,3 +123,164 @@ int connect_to_host(char *server_ip, int server_port)
     return fdsocket;
 }
 
+int invoke_client(char *PORT){
+
+    //Defining arguments for the server
+    int server;
+    char *IP = "127.0.0.1";
+    server = connect_to_host(IP, atoi(PORT));
+    //Test ptint
+    printf(" Test : Client has been succesfully invoked");
+
+	while(TRUE){
+		printf("\n[PA1-Client@CSE489/589]$ ");
+		fflush(stdout);
+
+		char *msg = (char*) malloc(sizeof(char)*MSG_SIZE);
+    	memset(msg, '\0', MSG_SIZE);
+		if(fgets(msg, MSG_SIZE-1, stdin) == NULL) //Mind the newline character that will be written to msg
+			exit(-1);
+
+		printf("I got: %s(size:%ld chars)", msg, strlen(msg));
+
+		printf("\nSENDing it to the remote server ... ");
+		if(send(server, msg, strlen(msg), 0) == strlen(msg))
+			printf("Done!\n");
+		fflush(stdout);
+
+		/* Initialize buffer to receieve response */
+        char *buffer = (char*) malloc(sizeof(char)*BUFFER_SIZE);
+        memset(buffer, '\0', BUFFER_SIZE);
+
+		if(recv(server, buffer, BUFFER_SIZE, 0) >= 0){
+			printf("Server responded: %s", buffer);
+			fflush(stdout);
+		}
+    }
+}
+
+
+invoke_server(char *PORT){
+    printf("Invoked server");
+	// if(argc != 2) {
+	// 	printf("Usage:%s [port]\n", argv[0]);
+	// 	exit(-1);
+	// }
+
+    int port, server_socket, head_socket, selret, sock_index, fdaccept=0;
+    socklen_t caddr_len;
+	struct sockaddr_in server_addr, client_addr;
+	fd_set master_list, watch_list;
+
+	/* Socket */
+	server_socket = socket(AF_INET, SOCK_STREAM, 0);
+    if(server_socket < 0)
+		perror("Cannot create socket");
+
+	/* Fill up sockaddr_in struct */
+	port = atoi(PORT);
+	bzero(&server_addr, sizeof(server_addr));
+
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    server_addr.sin_port = htons(port);
+
+    /* Bind */
+    if(bind(server_socket, (struct sockaddr *) &server_addr, sizeof(server_addr)) < 0 ){
+        perror("Bind failed");
+        printf("Error code: %d\n", errno);
+    }
+       
+
+    /* Listen */
+    if(listen(server_socket, BACKLOG) < 0)
+    	perror("Unable to listen on port");
+
+    /* ---------------------------------------------------------------------------- */
+
+    /* Zero select FD sets */
+    FD_ZERO(&master_list);
+    FD_ZERO(&watch_list);
+    
+    /* Register the listening socket */
+    FD_SET(server_socket, &master_list);
+    /* Register STDIN */
+    FD_SET(STDIN, &master_list);
+
+    head_socket = server_socket;
+
+    while(TRUE){
+        memcpy(&watch_list, &master_list, sizeof(master_list));
+
+        //printf("\n[PA1-Server@CSE489/589]$ ");
+		//fflush(stdout);
+
+        /* select() system call. This will BLOCK */
+        selret = select(head_socket + 1, &watch_list, NULL, NULL, NULL);
+        if(selret < 0)
+            perror("select failed.");
+
+        /* Check if we have sockets/STDIN to process */
+        if(selret > 0){
+            /* Loop through socket descriptors to check which ones are ready */
+            for(sock_index=0; sock_index<=head_socket; sock_index+=1){
+
+                if(FD_ISSET(sock_index, &watch_list)){
+
+                    /* Check if new command on STDIN */
+                    if (sock_index == STDIN){
+                    	char *cmd = (char*) malloc(sizeof(char)*CMD_SIZE);
+
+                    	memset(cmd, '\0', CMD_SIZE);
+						if(fgets(cmd, CMD_SIZE-1, stdin) == NULL) //Mind the newline character that will be written to cmd
+							exit(-1);
+
+						printf("\nI got: %s\n", cmd);
+						
+						//Process PA1 commands here ...
+
+						free(cmd);
+                    }
+                    /* Check if new client is requesting connection */
+                    else if(sock_index == server_socket){
+                        caddr_len = sizeof(client_addr);
+                        fdaccept = accept(server_socket, (struct sockaddr *)&client_addr, &caddr_len);
+                        if(fdaccept < 0)
+                            perror("Accept failed.");
+
+						printf("\nRemote Host connected!\n");                        
+
+                        /* Add to watched socket list */
+                        FD_SET(fdaccept, &master_list);
+                        if(fdaccept > head_socket) head_socket = fdaccept;
+                    }
+                    /* Read from existing clients */
+                    else{
+                        /* Initialize buffer to receieve response */
+                        char *buffer = (char*) malloc(sizeof(char)*BUFFER_SIZE);
+                        memset(buffer, '\0', BUFFER_SIZE);
+
+                        if(recv(sock_index, buffer, BUFFER_SIZE, 0) <= 0){
+                            close(sock_index);
+                            printf("Remote Host terminated connection!\n");
+
+                            /* Remove from watched list */
+                            FD_CLR(sock_index, &master_list);
+                        }
+                        else {
+                        	//Process incoming data from existing clients here ...
+
+                        	printf("\nClient sent me: %s\n", buffer);
+							printf("ECHOing it back to the remote host ... ");
+							if(send(fdaccept, buffer, strlen(buffer), 0) == strlen(buffer))
+								printf("Done!\n");
+							fflush(stdout);
+                        }
+
+                        free(buffer);
+                    }
+                }
+            }
+        }
+    }
+}
