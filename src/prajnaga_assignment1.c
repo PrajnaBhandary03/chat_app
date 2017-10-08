@@ -100,6 +100,9 @@ int connect_to_host(char *server_ip, int server_port)
 {
     int fdsocket, len;
     struct sockaddr_in remote_server_addr;
+      //Test ptint
+      cse4589_print_and_log(" Test : Called connect to host");
+      
 
     fdsocket = socket(AF_INET, SOCK_STREAM, 0);
     if(fdsocket < 0)
@@ -121,7 +124,9 @@ int invoke_client(char *PORT){
     //Defining arguments for the server
     int server;
     char *IP = "127.0.0.1";
-	server = connect_to_host(IP, atoi(PORT));
+    server = connect_to_host(IP, atoi(PORT));
+    //Test ptint
+    cse4589_print_and_log(" Test : Client has been succesfully invoked");
 
 	while(TRUE){
 		cse4589_print_and_log("\n[PA1-Client@CSE489/589]$ ");
