@@ -128,7 +128,8 @@ int invoke_client(char *PORT){
 
     //Defining arguments for the server
     int server;
-    char *IP = "127.0.0.1";
+    char *IP = "128.205.36.34";
+    //connect to euston
     server = connect_to_host(IP, atoi(PORT));
     //Test ptint
     printf(" Test : Client has been succesfully invoked");
