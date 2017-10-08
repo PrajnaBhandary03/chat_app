@@ -22,12 +22,26 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/socket.h>
+#include <strings.h>
 #include <string.h>
+#include <arpa/inet.h>
+
+//To get err no
+#include <errno.h>
 
 #include "../include/global.h"
 #include "../include/logger.h"
 
+
+#define TRUE 1
+#define MSG_SIZE 256
+#define BUFFER_SIZE 256
+
+
+int connect_to_host(char *server_ip, int server_port);
 int printhelp(char *filename);
+int invoke_client(char *PORT);
 
 /**
  * main function
@@ -47,7 +61,7 @@ int main(int argc, char **argv)
 
 	/*Start Here*/
     
-    printf("Invoked client_server file.");
+    cse4589_print_and_log("Invoked client_server file.");
     char *FILENAME = argv[0];
     if(argc != 3) {
         printhelp(FILENAME);
@@ -57,12 +71,16 @@ int main(int argc, char **argv)
     char *PORT = argv[2];
     
     if( strcmp(IDENTITY, "s") == 0){
-        printf("This is a server file");
+        cse4589_print_and_log("This is a server file");
         //call server
+
+        
     }
     else if(strcmp(IDENTITY, "c") == 0){
-        printf("This is a client file");
+        cse4589_print_and_log("This is a client file");
         // get IP Address of the host
+
+        invoke_client(PORT);
         //call client
         
     }else {
@@ -72,6 +90,62 @@ int main(int argc, char **argv)
 }
 
 int printhelp(char *filename){
-    printf("Usage:%s [s/c] [port]\n", filename);
+    cse4589_print_and_log("Usage:%s [s/c] [port]\n", filename);
     exit(-1);
+}
+
+
+
+int connect_to_host(char *server_ip, int server_port)
+{
+    int fdsocket, len;
+    struct sockaddr_in remote_server_addr;
+
+    fdsocket = socket(AF_INET, SOCK_STREAM, 0);
+    if(fdsocket < 0)
+       perror("Failed to create socket");
+
+    bzero(&remote_server_addr, sizeof(remote_server_addr));
+    remote_server_addr.sin_family = AF_INET;
+    inet_pton(AF_INET, server_ip, &remote_server_addr.sin_addr);
+    remote_server_addr.sin_port = htons(server_port);
+
+    if(connect(fdsocket, (struct sockaddr*)&remote_server_addr, sizeof(remote_server_addr)) < 0)
+        perror("Connect failed");
+
+    return fdsocket;
+}
+
+int invoke_client(char *PORT){
+
+    //Defining arguments for the server
+    int server;
+    char *IP = "127.0.0.1";
+	server = connect_to_host(IP, atoi(PORT));
+
+	while(TRUE){
+		cse4589_print_and_log("\n[PA1-Client@CSE489/589]$ ");
+		fflush(stdout);
+
+		char *msg = (char*) malloc(sizeof(char)*MSG_SIZE);
+    	memset(msg, '\0', MSG_SIZE);
+		if(fgets(msg, MSG_SIZE-1, stdin) == NULL) //Mind the newline character that will be written to msg
+			exit(-1);
+
+		cse4589_print_and_log("I got: %s(size:%ld chars)", msg, strlen(msg));
+
+		cse4589_print_and_log("\nSENDing it to the remote server ... ");
+		if(send(server, msg, strlen(msg), 0) == strlen(msg))
+			cse4589_print_and_log("Done!\n");
+		fflush(stdout);
+
+		/* Initialize buffer to receieve response */
+        char *buffer = (char*) malloc(sizeof(char)*BUFFER_SIZE);
+        memset(buffer, '\0', BUFFER_SIZE);
+
+		if(recv(server, buffer, BUFFER_SIZE, 0) >= 0){
+			cse4589_print_and_log("Server responded: %s", buffer);
+			fflush(stdout);
+		}
+    }
 }
