@@ -47,7 +47,7 @@
 int connect_to_host(char *server_ip, int server_port);
 int printhelp(char *filename);
 int invoke_client(char *PORT);
-invoke_server(char *PORT);
+int invoke_server(char *PORT);
 
 /**
  * main function
@@ -161,7 +161,7 @@ int invoke_client(char *PORT){
 }
 
 
-invoke_server(char *PORT){
+int invoke_server(char *PORT){
     printf("Invoked server function");
 	// if(argc != 2) {
 	// 	printf("Usage:%s [port]\n", argv[0]);
