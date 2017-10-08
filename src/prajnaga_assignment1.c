@@ -41,7 +41,7 @@
 
 int connect_to_host(char *server_ip, int server_port);
 int printhelp(char *filename);
-int invoke_client(char *PORT);
+
 
 /**
  * main function
@@ -79,9 +79,39 @@ int main(int argc, char **argv)
     else if(strcmp(IDENTITY, "c") == 0){
         cse4589_print_and_log("This is a client file");
         // get IP Address of the host
+                      
+            //Defining arguments for the server
+            int server;
+            char *IP = "127.0.0.1";
+            server = connect_to_host(IP, atoi(PORT));
+            //Test ptint
+            cse4589_print_and_log(" Test : Client has been succesfully invoked");
 
-        invoke_client(PORT);
-        //call client
+            while(TRUE){
+                cse4589_print_and_log("\n[PA1-Client@CSE489/589]$ ");
+                fflush(stdout);
+
+                char *msg = (char*) malloc(sizeof(char)*MSG_SIZE);
+                memset(msg, '\0', MSG_SIZE);
+                if(fgets(msg, MSG_SIZE-1, stdin) == NULL) //Mind the newline character that will be written to msg
+                    exit(-1);
+
+                cse4589_print_and_log("I got: %s(size:%ld chars)", msg, strlen(msg));
+
+                cse4589_print_and_log("\nSENDing it to the remote server ... ");
+                if(send(server, msg, strlen(msg), 0) == strlen(msg))
+                    cse4589_print_and_log("Done!\n");
+                fflush(stdout);
+
+                /* Initialize buffer to receieve response */
+                char *buffer = (char*) malloc(sizeof(char)*BUFFER_SIZE);
+                memset(buffer, '\0', BUFFER_SIZE);
+
+                if(recv(server, buffer, BUFFER_SIZE, 0) >= 0){
+                    cse4589_print_and_log("Server responded: %s", buffer);
+                    fflush(stdout);
+                }
+            }
         
     }else {
         printhelp(FILENAME);
@@ -119,38 +149,3 @@ int connect_to_host(char *server_ip, int server_port)
     return fdsocket;
 }
 
-int invoke_client(char *PORT){
-
-    //Defining arguments for the server
-    int server;
-    char *IP = "127.0.0.1";
-    server = connect_to_host(IP, atoi(PORT));
-    //Test ptint
-    cse4589_print_and_log(" Test : Client has been succesfully invoked");
-
-	while(TRUE){
-		cse4589_print_and_log("\n[PA1-Client@CSE489/589]$ ");
-		fflush(stdout);
-
-		char *msg = (char*) malloc(sizeof(char)*MSG_SIZE);
-    	memset(msg, '\0', MSG_SIZE);
-		if(fgets(msg, MSG_SIZE-1, stdin) == NULL) //Mind the newline character that will be written to msg
-			exit(-1);
-
-		cse4589_print_and_log("I got: %s(size:%ld chars)", msg, strlen(msg));
-
-		cse4589_print_and_log("\nSENDing it to the remote server ... ");
-		if(send(server, msg, strlen(msg), 0) == strlen(msg))
-			cse4589_print_and_log("Done!\n");
-		fflush(stdout);
-
-		/* Initialize buffer to receieve response */
-        char *buffer = (char*) malloc(sizeof(char)*BUFFER_SIZE);
-        memset(buffer, '\0', BUFFER_SIZE);
-
-		if(recv(server, buffer, BUFFER_SIZE, 0) >= 0){
-			cse4589_print_and_log("Server responded: %s", buffer);
-			fflush(stdout);
-		}
-    }
-}
