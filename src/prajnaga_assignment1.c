@@ -155,7 +155,11 @@ int invoke_client(char *PORT){
 
         if(strcmp(msg, "AUTHOR") == 0){
             char *UBIT_NAME = "prajnaga";
-            cse4589_print_and_log(" I, %s, have read and understood the course academic integrity policy", UBIT_NAME);
+            cse4589_print_and_log(" I, %s, have read and understood the course academic integrity policy.", UBIT_NAME);
+        }
+
+        if(strcmp(msg, "PORT") == 0){
+            cse4589_print_and_log(" The client is running on, %ld port", PORT);
         }
         
          //server = connect_to_host(IP, atoi(PORT));
