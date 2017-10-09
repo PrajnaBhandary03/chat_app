@@ -49,8 +49,8 @@ int connect_to_host(char *server_ip, int server_port);
 int printhelp(char *filename);
 int invoke_client(char *PORT);
 int invoke_server(char *PORT);
-int print_author(command);
-int print_port(command, port_num);
+int print_author(char *command);
+int print_port(char *command, char *port_num);
 
 // int start_shell();
 /**
@@ -136,7 +136,7 @@ int printhelp(char *filename){
 }
 
 //prints name of the author ON AUTHOR command
-int print_author(command){
+int print_author(char *command){
     char *UBIT_NAME = "prajnaga";
     cse4589_print_and_log("[%s:SUCCESS]\n", command);
     cse4589_print_and_log("\nI, %s, have read and understood the course academic integrity policy.", UBIT_NAME);
@@ -144,7 +144,7 @@ int print_author(command){
 }
 
 // prints port number on PORT command
-int print_port(command, port_num){
+int print_port(char *command, char *port_num){
     cse4589_print_and_log("[%s:SUCCESS]\n", command);
     cse4589_print_and_log("\nThe client is running on, %ld port", port_num);
     cse4589_print_and_log("[%s:END]\n", command);
