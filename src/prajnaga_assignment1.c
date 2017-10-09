@@ -149,6 +149,10 @@ int invoke_client(char *PORT){
 
         printf("I got: %s(size:%ld chars)", msg, strlen(msg));
 
+        //check msg. Has to be of type string.
+        msg[strlen(msg) - 1] = 0;
+        printf("New length: %ld chars",strlen(msg));
+
         if(strcmp(msg, "AUTHOR") == 0){
             char *UBIT_NAME = "prajnaga";
             cse4589_print_and_log(" I, %s, have read and understood the course academic integrity policy", UBIT_NAME);
