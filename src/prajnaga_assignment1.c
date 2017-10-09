@@ -130,6 +130,10 @@ int invoke_client(char *PORT){
     int server;
     char *IP = "128.205.36.34";
     //connect to euston
+    
+    printf(" Test : Client has been succesfully invoked");
+
+    
     server = connect_to_host(IP, atoi(PORT));
     //Test ptint
     printf(" Test : Client has been succesfully invoked");
@@ -145,19 +149,26 @@ int invoke_client(char *PORT){
 
 		printf("I got: %s(size:%ld chars)", msg, strlen(msg));
 
-		printf("\nSENDing it to the remote server ... ");
-		if(send(server, msg, strlen(msg), 0) == strlen(msg))
-			printf("Done!\n");
-		fflush(stdout);
 
-		/* Initialize buffer to receieve response */
-        char *buffer = (char*) malloc(sizeof(char)*BUFFER_SIZE);
-        memset(buffer, '\0', BUFFER_SIZE);
+        /*
+            //if LOGIN command is executed {
+            printf("\nSENDing it to the remote server ... ");
+		    if(send(server, msg, strlen(msg), 0) == strlen(msg))
+			    printf("Done!\n");
+		        fflush(stdout);
 
-		if(recv(server, buffer, BUFFER_SIZE, 0) >= 0){
-			printf("Server responded: %s", buffer);
-			fflush(stdout);
+		    // Initialize buffer to receieve response 
+            char *buffer = (char*) malloc(sizeof(char)*BUFFER_SIZE);
+            memset(buffer, '\0', BUFFER_SIZE);
+
+		    if(recv(server, buffer, BUFFER_SIZE, 0) >= 0){
+			    printf("Server responded: %s", buffer);
+			    fflush(stdout);
 		}
+
+        }
+        */
+        
     }
 }
 
