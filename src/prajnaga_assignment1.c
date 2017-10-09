@@ -71,7 +71,7 @@ int main(int argc, char **argv)
 
 	/*Start Here*/
     
-    printf("Invoked client_server file.");
+    //printf("Invoked client_server file.");
     char *FILENAME = argv[0];
     if(argc != 3) {
         printhelp(FILENAME);
@@ -91,11 +91,11 @@ int main(int argc, char **argv)
             if(fgets(command, MSG_SIZE-1, stdin) == NULL) //Mind the newline character that will be written to command
                 exit(-1);
     
-            printf("I got: %s(size:%ld chars)", command, strlen(command));
+            //printf("I got: %s(size:%ld chars)", command, strlen(command));
     
             //check command. Has to be of type string.
             command[strlen(command) - 1] = 0;
-            printf("New length: %ld chars",strlen(command));
+            //printf("New length: %ld chars",strlen(command));
     
             if(strcmp(command, "AUTHOR") == 0){
                 print_author(command);
@@ -105,7 +105,7 @@ int main(int argc, char **argv)
                 print_port(command, atoi(PORT));
             }
             else{
-                cse4589_print_and_log("[%s:ERROR]\n", command);
+                cse4589_print_and_log("\n[%s:ERROR]\n", command);
             }
             
         }
@@ -138,16 +138,16 @@ int printhelp(char *filename){
 //prints name of the author ON AUTHOR command
 int print_author(char *command){
     char *UBIT_NAME = "prajnaga";
-    cse4589_print_and_log("[%s:SUCCESS]\n", command);
+    cse4589_print_and_log("\n[%s:SUCCESS]\n", command);
     cse4589_print_and_log("\nI, %s, have read and understood the course academic integrity policy.", UBIT_NAME);
-    cse4589_print_and_log("[%s:END]\n", command);
+    cse4589_print_and_log("\n[%s:END]\n", command);
 }
 
 // prints port number on PORT command
 int print_port(char *command, int port_num){
-    cse4589_print_and_log("[%s:SUCCESS]\n", command);
+    cse4589_print_and_log("\n[%s:SUCCESS]\n", command);
     cse4589_print_and_log("\nThe client is running on, %ld port", port_num);
-    cse4589_print_and_log("[%s:END]\n", command);
+    cse4589_print_and_log("\n[%s:END]\n", command);
 }
 
 
@@ -185,7 +185,7 @@ int invoke_client(char *PORT){
     char *IP = "128.205.36.34";
     //connect to euston
     
-    printf(" Test : Client has been succesfully invoked");
+    //printf(" Test : Client has been succesfully invoked");
 
     while(TRUE){
 		// printf("\n[PA1-Client@CSE489/589]$ ");
