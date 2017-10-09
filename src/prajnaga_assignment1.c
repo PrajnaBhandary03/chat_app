@@ -32,6 +32,7 @@
 //To get err no
 #include <errno.h>
 
+//Including custom files
 #include "../include/global.h"
 #include "../include/logger.h"
 
@@ -48,7 +49,7 @@ int connect_to_host(char *server_ip, int server_port);
 int printhelp(char *filename);
 int invoke_client(char *PORT);
 int invoke_server(char *PORT);
-
+int start_shell();
 /**
  * main function
  *
@@ -124,6 +125,10 @@ int connect_to_host(char *server_ip, int server_port)
     return fdsocket;
 }
 
+
+
+
+
 int invoke_client(char *PORT){
 
     //Defining arguments for the server
@@ -133,12 +138,7 @@ int invoke_client(char *PORT){
     
     printf(" Test : Client has been succesfully invoked");
 
-    
-    server = connect_to_host(IP, atoi(PORT));
-    //Test ptint
-    printf(" Test : Client has been succesfully invoked");
-
-	while(TRUE){
+    while(TRUE){
 		printf("\n[PA1-Client@CSE489/589]$ ");
 		fflush(stdout);
 
@@ -147,29 +147,42 @@ int invoke_client(char *PORT){
 		if(fgets(msg, MSG_SIZE-1, stdin) == NULL) //Mind the newline character that will be written to msg
 			exit(-1);
 
-		printf("I got: %s(size:%ld chars)", msg, strlen(msg));
+        printf("I got: %s(size:%ld chars)", msg, strlen(msg));
 
-
-        /*
-            //if LOGIN command is executed {
-            printf("\nSENDing it to the remote server ... ");
-		    if(send(server, msg, strlen(msg), 0) == strlen(msg))
-			    printf("Done!\n");
-		        fflush(stdout);
-
-		    // Initialize buffer to receieve response 
-            char *buffer = (char*) malloc(sizeof(char)*BUFFER_SIZE);
-            memset(buffer, '\0', BUFFER_SIZE);
-
-		    if(recv(server, buffer, BUFFER_SIZE, 0) >= 0){
-			    printf("Server responded: %s", buffer);
-			    fflush(stdout);
-		}
-
+        if(strcmp(msg, "AUTHOR") == 0){
+            char *UBIT_NAME = "prajnaga";
+            cse4589_print_and_log(" I, %s, have read and understood the course academic integrity policy", UBIT_NAME);
         }
-        */
         
+         //server = connect_to_host(IP, atoi(PORT));
+            //Test ptint
+            //printf(" Test : Client has been succesfully invoked");
+
+
+
+
+                /*
+                    //if LOGIN command is executed {
+                    printf("\nSENDing it to the remote server ... ");
+                    if(send(server, msg, strlen(msg), 0) == strlen(msg))
+                        printf("Done!\n");
+                        fflush(stdout);
+
+                    // Initialize buffer to receieve response 
+                    char *buffer = (char*) malloc(sizeof(char)*BUFFER_SIZE);
+                    memset(buffer, '\0', BUFFER_SIZE);
+
+                    if(recv(server, buffer, BUFFER_SIZE, 0) >= 0){
+                        printf("Server responded: %s", buffer);
+                        fflush(stdout);
+                }
+
+                }
+                */
     }
+
+        
+    
 }
 
 
