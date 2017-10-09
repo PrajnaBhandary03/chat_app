@@ -138,16 +138,16 @@ int printhelp(char *filename){
 //prints name of the author ON AUTHOR command
 int print_author(char *command){
     char *UBIT_NAME = "prajnaga";
-    cse4589_print_and_log("\n[%s:SUCCESS]\n", command);
+    cse4589_print_and_log("\n[%s:SUCCESS]", command);
     cse4589_print_and_log("\nI, %s, have read and understood the course academic integrity policy.", UBIT_NAME);
-    cse4589_print_and_log("\n[%s:END]\n", command);
+    cse4589_print_and_log("\n[%s:END]", command);
 }
 
 // prints port number on PORT command
 int print_port(char *command, int port_num){
-    cse4589_print_and_log("\n[%s:SUCCESS]\n", command);
+    cse4589_print_and_log("\n[%s:SUCCESS]", command);
     cse4589_print_and_log("\nThe client is running on, %ld port", port_num);
-    cse4589_print_and_log("\n[%s:END]\n", command);
+    cse4589_print_and_log("\n[%s:END]", command);
 }
 
 
