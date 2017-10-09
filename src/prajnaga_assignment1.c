@@ -100,6 +100,10 @@ int printhelp(char *filename){
     exit(-1);
 }
 
+int print_author(){
+    char *UBIT_NAME = "prajnaga";
+    cse4589_print_and_log(" I, %s, have read and understood the course academic integrity policy.", UBIT_NAME);
+}
 
 
 int connect_to_host(char *server_ip, int server_port)
@@ -154,8 +158,7 @@ int invoke_client(char *PORT){
         printf("New length: %ld chars",strlen(msg));
 
         if(strcmp(msg, "AUTHOR") == 0){
-            char *UBIT_NAME = "prajnaga";
-            cse4589_print_and_log(" I, %s, have read and understood the course academic integrity policy.", UBIT_NAME);
+            print_author();
         }
 
         if(strcmp(msg, "PORT") == 0){
