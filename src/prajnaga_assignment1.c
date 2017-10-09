@@ -105,6 +105,11 @@ int print_author(){
     cse4589_print_and_log(" I, %s, have read and understood the course academic integrity policy.", UBIT_NAME);
 }
 
+int print_port(PORT){
+    int port_number = atoi(PORT);
+    cse4589_print_and_log(" The client is running on, %ld port", PORT);
+}
+
 
 int connect_to_host(char *server_ip, int server_port)
 {
@@ -162,7 +167,7 @@ int invoke_client(char *PORT){
         }
 
         if(strcmp(msg, "PORT") == 0){
-            cse4589_print_and_log(" The client is running on, %ld port", PORT);
+            print_port(PORT);
         }
         
          //server = connect_to_host(IP, atoi(PORT));
