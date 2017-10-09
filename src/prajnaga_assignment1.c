@@ -49,8 +49,8 @@ int connect_to_host(char *server_ip, int server_port);
 int printhelp(char *filename);
 int invoke_client(char *PORT);
 int invoke_server(char *PORT);
-int print_author();
-int print_port(port_num);
+int print_author(command);
+int print_port(command, port_num);
 
 // int start_shell();
 /**
@@ -86,23 +86,26 @@ int main(int argc, char **argv)
             printf("\n[PA1-Client@CSE489/589]$ ");
             fflush(stdout);
     
-            char *msg = (char*) malloc(sizeof(char)*MSG_SIZE);
-            memset(msg, '\0', MSG_SIZE);
-            if(fgets(msg, MSG_SIZE-1, stdin) == NULL) //Mind the newline character that will be written to msg
+            char *command = (char*) malloc(sizeof(char)*MSG_SIZE);
+            memset(command, '\0', MSG_SIZE);
+            if(fgets(command, MSG_SIZE-1, stdin) == NULL) //Mind the newline character that will be written to command
                 exit(-1);
     
-            printf("I got: %s(size:%ld chars)", msg, strlen(msg));
+            printf("I got: %s(size:%ld chars)", command, strlen(command));
     
-            //check msg. Has to be of type string.
-            msg[strlen(msg) - 1] = 0;
-            printf("New length: %ld chars",strlen(msg));
+            //check command. Has to be of type string.
+            command[strlen(command) - 1] = 0;
+            printf("New length: %ld chars",strlen(command));
     
-            if(strcmp(msg, "AUTHOR") == 0){
-                print_author();
+            if(strcmp(command, "AUTHOR") == 0){
+                print_author(command);
             }
     
-            if(strcmp(msg, "PORT") == 0){
-                print_port(atoi(PORT));
+            if(strcmp(command, "PORT") == 0){
+                print_port(command, atoi(PORT));
+            }
+            else{
+                cse4589_print_and_log("[%s:ERROR]\n", command);
             }
             
         }
@@ -126,18 +129,25 @@ int main(int argc, char **argv)
 	return 0;
 }
 
+//Common function to print usage
 int printhelp(char *filename){
     printf("Usage:%s [s/c] [port]\n", filename);
     exit(-1);
 }
 
-int print_author(){
+//prints name of the author ON AUTHOR command
+int print_author(command){
     char *UBIT_NAME = "prajnaga";
-    cse4589_print_and_log(" I, %s, have read and understood the course academic integrity policy.", UBIT_NAME);
+    cse4589_print_and_log("[%s:SUCCESS]\n", command);
+    cse4589_print_and_log("\nI, %s, have read and understood the course academic integrity policy.", UBIT_NAME);
+    cse4589_print_and_log("[%s:END]\n", command);
 }
 
-int print_port(int port_num){
-    cse4589_print_and_log(" The client is running on, %ld port", port_num);
+// prints port number on PORT command
+int print_port(command, port_num){
+    cse4589_print_and_log("[%s:SUCCESS]\n", command);
+    cse4589_print_and_log("\nThe client is running on, %ld port", port_num);
+    cse4589_print_and_log("[%s:END]\n", command);
 }
 
 
@@ -181,22 +191,22 @@ int invoke_client(char *PORT){
 		// printf("\n[PA1-Client@CSE489/589]$ ");
 		// fflush(stdout);
 
-		// char *msg = (char*) malloc(sizeof(char)*MSG_SIZE);
-    	// memset(msg, '\0', MSG_SIZE);
-		// if(fgets(msg, MSG_SIZE-1, stdin) == NULL) //Mind the newline character that will be written to msg
+		// char *command = (char*) malloc(sizeof(char)*MSG_SIZE);
+    	// memset(command, '\0', MSG_SIZE);
+		// if(fgets(command, MSG_SIZE-1, stdin) == NULL) //Mind the newline character that will be written to command
 		// 	exit(-1);
 
-        // printf("I got: %s(size:%ld chars)", msg, strlen(msg));
+        // printf("I got: %s(size:%ld chars)", command, strlen(command));
 
-        // //check msg. Has to be of type string.
-        // msg[strlen(msg) - 1] = 0;
-        // printf("New length: %ld chars",strlen(msg));
+        // //check command. Has to be of type string.
+        // command[strlen(command) - 1] = 0;
+        // printf("New length: %ld chars",strlen(command));
 
-        // if(strcmp(msg, "AUTHOR") == 0){
+        // if(strcmp(command, "AUTHOR") == 0){
         //     print_author();
         // }
 
-        // if(strcmp(msg, "PORT") == 0){
+        // if(strcmp(command, "PORT") == 0){
         //     print_port(atoi(PORT));
         // }
         
@@ -210,7 +220,7 @@ int invoke_client(char *PORT){
                 /*
                     //if LOGIN command is executed {
                     printf("\nSENDing it to the remote server ... ");
-                    if(send(server, msg, strlen(msg), 0) == strlen(msg))
+                    if(send(server, command, strlen(command), 0) == strlen(command))
                         printf("Done!\n");
                         fflush(stdout);
 
