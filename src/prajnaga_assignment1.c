@@ -50,7 +50,7 @@ int printhelp(char *filename);
 int invoke_client(char *PORT);
 int invoke_server(char *PORT);
 int print_author(char *command);
-int print_port(char *command, char *port_num);
+int print_port(char *command, int port_num);
 
 // int start_shell();
 /**
@@ -144,7 +144,7 @@ int print_author(char *command){
 }
 
 // prints port number on PORT command
-int print_port(char *command, char *port_num){
+int print_port(char *command, int port_num){
     cse4589_print_and_log("[%s:SUCCESS]\n", command);
     cse4589_print_and_log("\nThe client is running on, %ld port", port_num);
     cse4589_print_and_log("[%s:END]\n", command);
