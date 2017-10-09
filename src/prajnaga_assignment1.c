@@ -49,7 +49,7 @@ int connect_to_host(char *server_ip, int server_port);
 int printhelp(char *filename);
 int invoke_client(char *PORT);
 int invoke_server(char *PORT);
-int start_shell();
+// int start_shell();
 /**
  * main function
  *
@@ -76,19 +76,47 @@ int main(int argc, char **argv)
     //Defining input arguments
     char *IDENTITY = argv[1];
     char *PORT = argv[2];
+
+    if( strcmp(IDENTITY, "s") == 0 || strcmp(IDENTITY, "c") == 0 ){
+
+        while(TRUE){
+            printf("\n[PA1-Client@CSE489/589]$ ");
+            fflush(stdout);
     
-    if( strcmp(IDENTITY, "s") == 0){
-        printf("This is a server file");
-        //call server
-        invoke_server(PORT);
-        
-    }
-    else if(strcmp(IDENTITY, "c") == 0){
-        printf("This is a client file");
-        // get IP Address of the host
-        invoke_client(PORT);
-        //call client
-        
+            char *msg = (char*) malloc(sizeof(char)*MSG_SIZE);
+            memset(msg, '\0', MSG_SIZE);
+            if(fgets(msg, MSG_SIZE-1, stdin) == NULL) //Mind the newline character that will be written to msg
+                exit(-1);
+    
+            printf("I got: %s(size:%ld chars)", msg, strlen(msg));
+    
+            //check msg. Has to be of type string.
+            msg[strlen(msg) - 1] = 0;
+            printf("New length: %ld chars",strlen(msg));
+    
+            if(strcmp(msg, "AUTHOR") == 0){
+                print_author();
+            }
+    
+            if(strcmp(msg, "PORT") == 0){
+                print_port(atoi(PORT));
+            }
+            
+        }
+
+        if( strcmp(IDENTITY, "s") == 0){
+            printf("This is a server file");
+            //call server
+            invoke_server(PORT);
+            
+        }
+        else if(strcmp(IDENTITY, "c") == 0){
+            printf("This is a client file");
+            // get IP Address of the host
+            invoke_client(PORT);
+            //call client
+        }
+     
     }else {
         printhelp(FILENAME);
     }
@@ -105,9 +133,8 @@ int print_author(){
     cse4589_print_and_log(" I, %s, have read and understood the course academic integrity policy.", UBIT_NAME);
 }
 
-int print_port(PORT){
-    int port_number = atoi(PORT);
-    cse4589_print_and_log(" The client is running on, %ld port", PORT);
+int print_port(int port_num){
+    cse4589_print_and_log(" The client is running on, %ld port", port_num);
 }
 
 
@@ -148,27 +175,27 @@ int invoke_client(char *PORT){
     printf(" Test : Client has been succesfully invoked");
 
     while(TRUE){
-		printf("\n[PA1-Client@CSE489/589]$ ");
-		fflush(stdout);
+		// printf("\n[PA1-Client@CSE489/589]$ ");
+		// fflush(stdout);
 
-		char *msg = (char*) malloc(sizeof(char)*MSG_SIZE);
-    	memset(msg, '\0', MSG_SIZE);
-		if(fgets(msg, MSG_SIZE-1, stdin) == NULL) //Mind the newline character that will be written to msg
-			exit(-1);
+		// char *msg = (char*) malloc(sizeof(char)*MSG_SIZE);
+    	// memset(msg, '\0', MSG_SIZE);
+		// if(fgets(msg, MSG_SIZE-1, stdin) == NULL) //Mind the newline character that will be written to msg
+		// 	exit(-1);
 
-        printf("I got: %s(size:%ld chars)", msg, strlen(msg));
+        // printf("I got: %s(size:%ld chars)", msg, strlen(msg));
 
-        //check msg. Has to be of type string.
-        msg[strlen(msg) - 1] = 0;
-        printf("New length: %ld chars",strlen(msg));
+        // //check msg. Has to be of type string.
+        // msg[strlen(msg) - 1] = 0;
+        // printf("New length: %ld chars",strlen(msg));
 
-        if(strcmp(msg, "AUTHOR") == 0){
-            print_author();
-        }
+        // if(strcmp(msg, "AUTHOR") == 0){
+        //     print_author();
+        // }
 
-        if(strcmp(msg, "PORT") == 0){
-            print_port(PORT);
-        }
+        // if(strcmp(msg, "PORT") == 0){
+        //     print_port(atoi(PORT));
+        // }
         
          //server = connect_to_host(IP, atoi(PORT));
             //Test ptint
