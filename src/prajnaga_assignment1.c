@@ -101,7 +101,7 @@ int main(int argc, char **argv)
                 print_author(command);
             }
     
-            if(strcmp(command, "PORT") == 0){
+            else if(strcmp(command, "PORT") == 0){
                 print_port(command, atoi(PORT));
             }
             else{
