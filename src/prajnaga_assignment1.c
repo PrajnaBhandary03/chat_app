@@ -49,6 +49,9 @@ int connect_to_host(char *server_ip, int server_port);
 int printhelp(char *filename);
 int invoke_client(char *PORT);
 int invoke_server(char *PORT);
+int print_author();
+int print_port(port_num);
+
 // int start_shell();
 /**
  * main function
