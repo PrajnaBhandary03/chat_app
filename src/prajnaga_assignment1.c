@@ -165,7 +165,12 @@ int print_port(char *command, int port_num){
     cse4589_print_and_log("[%s:END]\n", command);
 }
 
+
+
+// Function to get IP Address. 
+//REFERENCED STACK OVERFLOW FOR CODE.
 char* get_my_ip_address() {
+    printf("Called get_my_ip_address");
     int sockfd;
     struct sockaddr_storage remoteaddr; // client address
     socklen_t addrlen;
@@ -220,6 +225,7 @@ char* get_my_ip_address() {
     close(sockfd);
 
     strcpy(ip_addr, remoteIP);
+    printf("IP after copy:%s", ip_addr);
     return ip_addr;
 }
 
