@@ -187,7 +187,7 @@ char *get_my_ip_address() {
     memset(&hints, 0, sizeof hints);
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_DGRAM;
-    if ((rv = getaddrinfo("8.8.8.8", "http", &hints, &ai)) != 0) {
+    if ((rv = getaddrinfo("8.8.8.8:53", "http", &hints, &ai)) != 0) {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
         exit(1);
     }
@@ -214,11 +214,11 @@ char *get_my_ip_address() {
     getsockname(sockfd, (struct sockaddr*)&remoteaddr, &addrlen);
 
     // deal with both IPv4 and IPv6:
-    if (remoteaddr.ss_family == AF_INET) {
+    //if (remoteaddr.ss_family == AF_INET) {
         struct sockaddr_in *s = (struct sockaddr_in *)&remoteaddr;
         inet_ntop(AF_INET, &s->sin_addr, remoteIP, addrlen);
         printf("IP_ADDRESS 1:%s\n", remoteIP);
-    }
+    //}
     // else { // AF_INET6
     //     struct sockaddr_in6 *s = (struct sockaddr_in6 *)&remoteaddr;
     //     inet_ntop(AF_INET6, &s->sin6_addr, remoteIP, addrlen);
