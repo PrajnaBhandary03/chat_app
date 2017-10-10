@@ -156,8 +156,8 @@ int print_ip(char *command, char *IP){
     cse4589_print_and_log("[%s:SUCCESS]\n", command);
     cse4589_print_and_log("IP:%s\n", IP);
    // cse4589_print_and_log("IP:%s\n", itoa(IP));
-    cse4589_print_and_log("IP:%ld\n", IP);
-    cse4589_print_and_log("IP:%ld\n", atoi(IP));
+    //cse4589_print_and_log("IP:%ld\n", IP);
+    //cse4589_print_and_log("IP:%ld\n", atoi(IP));
     cse4589_print_and_log("[%s:END]\n", command);
 }
 
@@ -214,17 +214,17 @@ char *get_my_ip_address() {
     getsockname(sockfd, (struct sockaddr*)&remoteaddr, &addrlen);
 
     // deal with both IPv4 and IPv6:
-    if (remoteaddr.ss_family == AF_INET) {
+    // if (remoteaddr.ss_family == AF_INET) {
         struct sockaddr_in *s = (struct sockaddr_in *)&remoteaddr;
         inet_ntop(AF_INET, &s->sin_addr, remoteIP, addrlen);
-        printf("IP_ADDRESS1:%s", remoteIP);
-    }
-    else { // AF_INET6
-        struct sockaddr_in6 *s = (struct sockaddr_in6 *)&remoteaddr;
-        inet_ntop(AF_INET6, &s->sin6_addr, remoteIP, addrlen);
-        printf("IP_ADDRESS2:%ld", remoteIP);
-    }
-    printf("IP_ADDRESS3:%s", inet_ntoi(remoteIP));
+        printf("IP_ADDRESS 1:%s\n", remoteIP);
+    //}
+    // else { // AF_INET6
+    //     struct sockaddr_in6 *s = (struct sockaddr_in6 *)&remoteaddr;
+    //     inet_ntop(AF_INET6, &s->sin6_addr, remoteIP, addrlen);
+    //     printf("IP_ADDRESS2:%s", remoteIP);
+    // }
+    printf("IP_ADDRESS3:%s", remoteIP);
 
     freeaddrinfo(ai); // all done with this structure
     close(sockfd);
