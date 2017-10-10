@@ -50,7 +50,9 @@ int printhelp(char *filename);
 int invoke_client(char *PORT);
 int invoke_server(char *PORT);
 int print_author(char *command);
+int print_ip(char *command, char *IP);
 int print_port(char *command, int port_num);
+char *get_my_ip_address();
 
 // int start_shell();
 /**
@@ -104,6 +106,10 @@ int main(int argc, char **argv)
             else if(strcmp(command, "PORT") == 0){
                 print_port(command, atoi(PORT));
             }
+            else if(strcmp(command, "IP") == 0){
+                char *IP = get_my_ip_address();
+                print_ip(command, IP);
+            }
             else{
                 cse4589_print_and_log("\n[%s:ERROR]\n", command);
             }
@@ -143,11 +149,76 @@ int print_author(char *command){
     cse4589_print_and_log("[%s:END]\n", command);
 }
 
+// prints IP number on PORT command
+int print_ip(char *command, char *IP){
+    cse4589_print_and_log("[%s:SUCCESS]\n", command);
+    cse4589_print_and_log("IP:%s\n", IP);
+    cse4589_print_and_log("[%s:END]\n", command);
+}
+
 // prints port number on PORT command
 int print_port(char *command, int port_num){
     cse4589_print_and_log("[%s:SUCCESS]\n", command);
     cse4589_print_and_log("PORT:%ld\n", port_num);
     cse4589_print_and_log("[%s:END]\n", command);
+}
+
+char* get_my_ip_address() {
+    int sockfd;
+    struct sockaddr_storage remoteaddr; // client address
+    socklen_t addrlen;
+    char remoteIP[INET6_ADDRSTRLEN];
+    char *ip_addr;
+    ip_addr = malloc(sizeof(char) * INET6_ADDRSTRLEN);
+    int rv;
+
+    struct addrinfo hints, *ai, *p;
+
+    memset(&hints, 0, sizeof hints);
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_DGRAM;
+    if ((rv = getaddrinfo("8.8.8.8", "http", &hints, &ai)) != 0) {
+        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
+        exit(1);
+    }
+    // loop through all the results and make a socket
+    for(p = ai; p != NULL; p = p->ai_next) {
+        if ((sockfd = socket(p->ai_family, p->ai_socktype,
+            p->ai_protocol)) == -1) {
+            perror("UDP: socket");
+            continue;
+        }
+
+        if (connect(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
+            close(sockfd);
+            perror("UDP: connect");
+            continue;
+        }
+        break;
+    }
+    if (p == NULL) {
+        fprintf(stderr, "UDP: failed to bind socket\n");
+        exit(2);
+    }
+
+    getsockname(sockfd, (struct sockaddr*)&remoteaddr, &addrlen);
+
+    // deal with both IPv4 and IPv6:
+    if (remoteaddr.ss_family == AF_INET) {
+        struct sockaddr_in *s = (struct sockaddr_in *)&remoteaddr;
+        inet_ntop(AF_INET, &s->sin_addr, remoteIP, addrlen);
+    }
+    else { // AF_INET6
+        struct sockaddr_in6 *s = (struct sockaddr_in6 *)&remoteaddr;
+        inet_ntop(AF_INET6, &s->sin6_addr, remoteIP, addrlen);
+    }
+    printf("IP_ADDRESS:%s", remoteIP);
+
+    freeaddrinfo(ai); // all done with this structure
+    close(sockfd);
+
+    strcpy(ip_addr, remoteIP);
+    return ip_addr;
 }
 
 
@@ -182,35 +253,14 @@ int invoke_client(char *PORT){
 
     //Defining arguments for the server
     int server;
-    char *IP = "128.205.36.34";
+    char *SERVER_IP = "128.205.36.34";
     //connect to euston
     
     //printf(" Test : Client has been succesfully invoked");
 
     while(TRUE){
-		// printf("\n[PA1-Client@CSE489/589]$ ");
-		// fflush(stdout);
-
-		// char *command = (char*) malloc(sizeof(char)*MSG_SIZE);
-    	// memset(command, '\0', MSG_SIZE);
-		// if(fgets(command, MSG_SIZE-1, stdin) == NULL) //Mind the newline character that will be written to command
-		// 	exit(-1);
-
-        // printf("I got: %s(size:%ld chars)", command, strlen(command));
-
-        // //check command. Has to be of type string.
-        // command[strlen(command) - 1] = 0;
-        // printf("New length: %ld chars",strlen(command));
-
-        // if(strcmp(command, "AUTHOR") == 0){
-        //     print_author();
-        // }
-
-        // if(strcmp(command, "PORT") == 0){
-        //     print_port(atoi(PORT));
-        // }
         
-         //server = connect_to_host(IP, atoi(PORT));
+         //server = connect_to_host(SERVER_IP, atoi(PORT));
             //Test ptint
             //printf(" Test : Client has been succesfully invoked");
 
