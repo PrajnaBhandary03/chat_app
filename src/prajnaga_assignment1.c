@@ -155,7 +155,9 @@ int print_author(char *command){
 int print_ip(char *command, char *IP){
     cse4589_print_and_log("[%s:SUCCESS]\n", command);
     cse4589_print_and_log("IP:%s\n", IP);
+    cse4589_print_and_log("IP:%s\n", itoa(IP));
     cse4589_print_and_log("IP:%ld\n", IP);
+    cse4589_print_and_log("IP:%ld\n", atoi(IP));
     cse4589_print_and_log("[%s:END]\n", command);
 }
 
@@ -228,7 +230,7 @@ char *get_my_ip_address() {
     close(sockfd);
 
     strcpy(ip_addr, remoteIP);
-    printf("IP after copy:%s", ip_addr);
+    printf("IP simple copy:%s", ip_addr);
     return ip_addr;
 }
 
