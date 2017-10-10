@@ -187,7 +187,7 @@ char *get_my_ip_address() {
     memset(&hints, 0, sizeof hints);
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_DGRAM;
-    if ((rv = getaddrinfo("8.8.8.8:53", "http", &hints, &ai)) != 0) {
+    if ((rv = getaddrinfo("8.8.8.8", "http", &hints, &ai)) != 0) {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
         exit(1);
     }
