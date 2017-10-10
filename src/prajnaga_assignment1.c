@@ -221,7 +221,7 @@ char *get_my_ip_address() {
         inet_ntop(AF_INET6, &s->sin6_addr, remoteIP, addrlen);
         printf("IP_ADDRESS2:%s", remoteIP);
     }
-    printf("IP_ADDRESS3:%x", remoteIP);
+    printf("IP_ADDRESS3:%s", remoteIP);
 
     freeaddrinfo(ai); // all done with this structure
     close(sockfd);
