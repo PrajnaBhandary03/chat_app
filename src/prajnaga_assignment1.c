@@ -52,7 +52,7 @@ int printhelp(char *filename);
 int invoke_client(char *PORT);
 int invoke_server(char *PORT);
 int print_author(char *command);
-int print_ip(char *command, int IP);
+int print_ip(char *command, char *IP);
 int print_port(char *command, int port_num);
 int get_my_ip_address();
 
@@ -109,7 +109,7 @@ int main(int argc, char **argv)
                 print_port(command, atoi(PORT));
             }
             else if(strcmp(command, "IP") == 0){
-                int IP = get_my_ip_address();
+                char *IP = get_my_ip_address();
                 print_ip(command, IP);
             }
             else{
@@ -152,7 +152,7 @@ int print_author(char *command){
 }
 
 // prints IP number on PORT command
-int print_ip(char *command, int IP){
+int print_ip(char *command, IP){
     cse4589_print_and_log("[%s:SUCCESS]\n", command);
     cse4589_print_and_log("IP:%ld\n", IP);
     cse4589_print_and_log("[%s:END]\n", command);
@@ -169,7 +169,7 @@ int print_port(char *command, int port_num){
 
 // Function to get IP Address. 
 //REFERENCED STACK OVERFLOW FOR CODE.
-int get_my_ip_address() {
+char *get_my_ip_address() {
     printf("Called get_my_ip_address");
     int sockfd;
     struct sockaddr_storage remoteaddr; // client address
@@ -221,14 +221,14 @@ int get_my_ip_address() {
         inet_ntop(AF_INET6, &s->sin6_addr, remoteIP, addrlen);
         printf("IP_ADDRESS2:%s", remoteIP);
     }
-    printf("IP_ADDRESS3:%ld", remoteIP);
+    printf("IP_ADDRESS3:%x", remoteIP);
 
     freeaddrinfo(ai); // all done with this structure
     close(sockfd);
 
     strcpy(ip_addr, remoteIP);
-    printf("IP after copy:%ld", atoi(ip_addr));
-    return atoi(ip_addr);
+    printf("IP after copy:%x", ip_addr);
+    return ip_addr;
 }
 
 
