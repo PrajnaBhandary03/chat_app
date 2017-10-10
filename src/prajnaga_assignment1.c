@@ -54,7 +54,7 @@ int invoke_server(char *PORT);
 int print_author(char *command);
 int print_ip(char *command, char *IP);
 int print_port(char *command, int port_num);
-char *get_my_ip_address();
+int get_my_ip_address();
 
 // int start_shell();
 /**
@@ -109,7 +109,7 @@ int main(int argc, char **argv)
                 print_port(command, atoi(PORT));
             }
             else if(strcmp(command, "IP") == 0){
-                char *IP = get_my_ip_address();
+                int IP = get_my_ip_address();
                 print_ip(command, IP);
             }
             else{
@@ -169,7 +169,7 @@ int print_port(char *command, int port_num){
 
 // Function to get IP Address. 
 //REFERENCED STACK OVERFLOW FOR CODE.
-char* get_my_ip_address() {
+int get_my_ip_address() {
     printf("Called get_my_ip_address");
     int sockfd;
     struct sockaddr_storage remoteaddr; // client address
@@ -227,7 +227,7 @@ char* get_my_ip_address() {
     close(sockfd);
 
     strcpy(ip_addr, remoteIP);
-    printf("IP after copy:%s", ip_addr);
+    printf("IP after copy:%ld", atoi(ip_addr));
     return ip_addr;
 }
 
