@@ -227,7 +227,7 @@ char *get_my_ip_address() {
     close(sockfd);
 
     strcpy(ip_addr, remoteIP);
-    printf("IP after copy:%x", ip_addr);
+    printf("IP after copy:%s", ip_addr);
     return ip_addr;
 }
 
