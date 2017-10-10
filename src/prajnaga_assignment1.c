@@ -155,6 +155,7 @@ int print_author(char *command){
 int print_ip(char *command, char *IP){
     cse4589_print_and_log("[%s:SUCCESS]\n", command);
     cse4589_print_and_log("IP:%s\n", IP);
+    cse4589_print_and_log("IP:%ld\n", IP);
     cse4589_print_and_log("[%s:END]\n", command);
 }
 
@@ -219,7 +220,7 @@ char *get_my_ip_address() {
     else { // AF_INET6
         struct sockaddr_in6 *s = (struct sockaddr_in6 *)&remoteaddr;
         inet_ntop(AF_INET6, &s->sin6_addr, remoteIP, addrlen);
-        printf("IP_ADDRESS2:%s", remoteIP);
+        printf("IP_ADDRESS2:%ld", remoteIP);
     }
     printf("IP_ADDRESS3:%s", remoteIP);
 
