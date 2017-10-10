@@ -174,7 +174,7 @@ char* get_my_ip_address() {
     int sockfd;
     struct sockaddr_storage remoteaddr; // client address
     socklen_t addrlen;
-    char *remoteIP[INET6_ADDRSTRLEN];
+    char remoteIP[INET6_ADDRSTRLEN];
     char *ip_addr;
     ip_addr = malloc(sizeof(char) * INET6_ADDRSTRLEN);
     int rv;
@@ -221,7 +221,7 @@ char* get_my_ip_address() {
         inet_ntop(AF_INET6, &s->sin6_addr, remoteIP, addrlen);
         printf("IP_ADDRESS2:%s", remoteIP);
     }
-    printf("IP_ADDRESS3:%ld", atoi(remoteIP));
+    printf("IP_ADDRESS3:%ld", remoteIP);
 
     freeaddrinfo(ai); // all done with this structure
     close(sockfd);
