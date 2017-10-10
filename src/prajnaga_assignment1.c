@@ -54,7 +54,7 @@ int invoke_server(char *PORT);
 int print_author(char *command);
 int print_ip(char *command, char *IP);
 int print_port(char *command, int port_num);
-int get_my_ip_address();
+char *get_my_ip_address();
 
 // int start_shell();
 /**
@@ -152,9 +152,9 @@ int print_author(char *command){
 }
 
 // prints IP number on PORT command
-int print_ip(char *command, IP){
+int print_ip(char *command, char *IP){
     cse4589_print_and_log("[%s:SUCCESS]\n", command);
-    cse4589_print_and_log("IP:%ld\n", IP);
+    cse4589_print_and_log("IP:%s\n", IP);
     cse4589_print_and_log("[%s:END]\n", command);
 }
 
