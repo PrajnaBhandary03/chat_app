@@ -214,12 +214,14 @@ char* get_my_ip_address() {
     if (remoteaddr.ss_family == AF_INET) {
         struct sockaddr_in *s = (struct sockaddr_in *)&remoteaddr;
         inet_ntop(AF_INET, &s->sin_addr, remoteIP, addrlen);
+        printf("IP_ADDRESS1:%s", remoteIP);
     }
     else { // AF_INET6
         struct sockaddr_in6 *s = (struct sockaddr_in6 *)&remoteaddr;
         inet_ntop(AF_INET6, &s->sin6_addr, remoteIP, addrlen);
+        printf("IP_ADDRESS2:%s", remoteIP);
     }
-    printf("IP_ADDRESS:%s", remoteIP);
+    printf("IP_ADDRESS3:%s", remoteIP);
 
     freeaddrinfo(ai); // all done with this structure
     close(sockfd);
