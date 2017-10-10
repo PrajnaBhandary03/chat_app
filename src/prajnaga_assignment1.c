@@ -155,7 +155,7 @@ int print_author(char *command){
 int print_ip(char *command, char *IP){
     cse4589_print_and_log("[%s:SUCCESS]\n", command);
     cse4589_print_and_log("IP:%s\n", IP);
-    cse4589_print_and_log("IP:%s\n", itoa(IP));
+   // cse4589_print_and_log("IP:%s\n", itoa(IP));
     cse4589_print_and_log("IP:%ld\n", IP);
     cse4589_print_and_log("IP:%ld\n", atoi(IP));
     cse4589_print_and_log("[%s:END]\n", command);
