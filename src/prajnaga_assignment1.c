@@ -228,7 +228,7 @@ int get_my_ip_address() {
 
     strcpy(ip_addr, remoteIP);
     printf("IP after copy:%ld", atoi(ip_addr));
-    return ip_addr;
+    return atoi(ip_addr);
 }
 
 
